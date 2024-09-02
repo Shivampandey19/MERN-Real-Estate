@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import { Link,useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import { signInStart,signInFailure,signInSuccess } from '../Redux/User/userSlice.js';
+
 
 export default function signIn() {
   const [formData, setFormData] = useState({});
-  const [error, setError] = useState(null);
-  const [loading,setLoading] = useState(false);
+  const {loading, error} =useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handleChange= (e) =>{
     setFormData({
         ...formData,
@@ -17,7 +20,7 @@ export default function signIn() {
     e.preventDefault();
     
     try{
-      setLoading(true);
+      dispatch(signInStart());
       const res = await fetch('/api/auth/signIn',
         {
           method: 'POST',
@@ -28,17 +31,13 @@ export default function signIn() {
         })
       const data =await res.json();
       if(data.success===false){
-        setLoading(false);
-        setError(data.message);
+        dispatch(signInFailure(data.message));
         return;
-      }
-      setLoading(false);
-      setError(null);
+      }dispatch(signInSuccess(data));
       navigate('/');
       //console.log(data);
     }catch (error) {
-      setLoading(false);
-      setError(error.message);
+      dispatch(signInFailure(error.message));
     }
   };
   return (
@@ -47,12 +46,6 @@ export default function signIn() {
         Sign In
       </h1>
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
-        {/* <input 
-        type='text' 
-        placeholder='username' 
-        className='border p-3 rounded-lg' 
-        id='userName' onChange={handleChange} 
-        />  */}
         <input 
         type='email' 
         placeholder='email' 
