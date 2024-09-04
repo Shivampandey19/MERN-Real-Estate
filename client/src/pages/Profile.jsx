@@ -36,12 +36,6 @@ export default function Profile() {
   const [userListings ,setUserListings]=useState([]);
   const dispatch = useDispatch();
   
-  
-  // console.log(file);
-  // console.log(filePercentage);
-  // console.log(formData);
-  // console.log(fileUploadError);
-  
   useEffect(() => {
     if(file) {
       handleFileUpload(file);
@@ -151,7 +145,23 @@ export default function Profile() {
       setShowListingsError(true);
     }
     
-  }
+  };
+
+  const handleListingDelete = async (listingId) => {
+    try {
+      const res = await fetch(`/api/listing/delete/${listingId}`,{
+        method : 'DELETE',
+      });
+      const data = await res.json();
+      if(data.sucess === false){
+        console.log(data.message);
+        return;
+      }
+      setUserListings((prev) => prev.filter((listing) => listing._id !== listingId));
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <div className='p-3 max-w-lg mx-auto'>
@@ -236,8 +246,12 @@ export default function Profile() {
         </Link>
       </form>
       <div className='flex justify-between mt-5'>
-      <span onClick={handleDeleteUser} className='text-red-700 cursor-pointer' >Delete account</span>
-      <span onClick={handleSignOut} className='text-red-700 cursor-pointer' >Sign out</span>
+      <span onClick={handleDeleteUser} className='text-red-700 cursor-pointer' >
+        Delete account
+      </span>
+      <span onClick={handleSignOut} className='text-red-700 cursor-pointer' >
+        Sign out
+      </span>
       </div>
       <p className='text-red-700 mt-5'>
         {error ? error : ''}
@@ -273,7 +287,7 @@ export default function Profile() {
             </p>
           </Link>
           <div className='flex flex-col items-center'>
-            <button className='text-red-700 uppercase'>
+            <button onClick={() => handleListingDelete(listing._id)} className='text-red-700 uppercase'>
               Delete
             </button>
             <button className='text-green-700 uppercase'>
