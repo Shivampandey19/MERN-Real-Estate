@@ -1,11 +1,12 @@
-import { BrowserRouter,Routes,Route } from "react-router-dom"
-import Home from "./pages/Home"
-import SignIn from "./pages/SignIn"
-import Profile from "./pages/Profile"
-import About from "./pages/About"
-import SignUp from "./pages/SignUp"
-import Header from "./Components/Header"
-import PrivateRoute from "./Components/PrivateRoute"
+import { BrowserRouter,Routes,Route } from "react-router-dom";
+import Home from "./pages/Home";
+import SignIn from "./pages/SignIn";
+import Profile from "./pages/Profile";
+import About from "./pages/About";
+import SignUp from "./pages/SignUp";
+import Header from "./Components/Header";
+import PrivateRoute from "./Components/PrivateRoute";
+import CreateListing from "./pages/CreateListing";
 
 export default function App() {
   return (
@@ -18,7 +19,9 @@ export default function App() {
     <Route path="/signUp" element= {<SignUp />}/>
     <Route path="/About" element= {<About />}/>
     <Route element={<PrivateRoute />}>
-    <Route path="/Profile" element= {<Profile />}/>
+      <Route path="/Profile" element= {<Profile />}/>
+      <Route path="/create-listing" element= 
+      {<CreateListing />}/>
     </Route>
     </Routes> 
     </BrowserRouter>
